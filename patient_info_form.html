@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    <title>रोगी सूचना फॉर्म | Patient Information Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            padding: 20px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: slideIn 0.6s ease;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.8s ease;
+        }
+
+        .form-content {
+            padding: 35px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Colorful section backgrounds */
+        .section:nth-child(1) {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .section:nth-child(2) {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-left: 5px solid #4facfe;
+        }
+
+        .section:nth-child(3) {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            border-left: 5px solid #667eea;
+        }
+
+        .section:nth-child(4) {
+            background: linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%);
+            border-left: 5px solid #f093fb;
+        }
+
+        .section:nth-child(5) {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-left: 5px solid #f39c12;
+        }
+
+        .section:nth-child(6) {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border-left: 5px solid #00b894;
+        }
+
+        .section:nth-child(7) {
+            background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+            border-left: 5px solid #fd79a8;
+        }
+
+        .section:nth-child(8) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-left: 5px solid #74b9ff;
+        }
+
+        .section:nth-child(9) {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 5px solid #ff7675;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #2d3436;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        .section-title::before {
+            font-size: 26px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Custom icons for each section */
+        .section:nth-child(1) .section-title::before { content: "🎯"; }
+        .section:nth-child(2) .section-title::before { content: "👤"; }
+        .section:nth-child(3) .section-title::before { content: "🩺"; }
+        .section:nth-child(4) .section-title::before { content: "🚬"; }
+        .section:nth-child(5) .section-title::before { content: "⚕️"; }
+        .section:nth-child(6) .section-title::before { content: "📋"; }
+        .section:nth-child(7) .section-title::before { content: "👩"; }
+        .section:nth-child(8) .section-title::before { content: "💊"; }
+        .section:nth-child(9) .section-title::before { content: "❤️"; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3436;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            margin-top: 10px;
+        }
+
+        .checkbox-group label {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+            color: #2d3436;
+        }
+
+        .checkbox-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(255,255,255,0.95);
+            transform: translateX(5px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            margin: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            border: 3px solid #667eea;
+            border-radius: 6px;
+            position: relative;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #764ba2;
+            animation: pulse 0.3s ease;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-item label {
+            font-weight: normal;
+            margin: 0;
+            cursor: pointer;
+            padding: 5px;
+            user-select: none;
+            font-size: 14px;
+        }
+
+        .gyneco-section {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 100%);
+            border-radius: 12px;
+            border: 2px dashed #fd79a8;
+        }
+
+        .gyneco-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
+            min-height: 55px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .submit-btn:nth-child(1) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:nth-child(2) {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .submit-btn:nth-child(3) {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            margin-top: 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loading::before {
+            content: '⏳';
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .success-message {
+            display: none;
+            padding: 25px;
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border: 2px solid #00b894;
+            border-radius: 15px;
+            color: #2d3436;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-message::before {
+            content: '✅';
+            font-size: 50px;
+            display: block;
+            margin-bottom: 15px;
+            animation: pulse 0.5s ease;
+        }
+
+        .required {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #636e72;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-container {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .submit-btn {
+                font-size: 15px;
+                padding: 14px;
+                min-height: 52px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .form-group label {
+                font-size: 14px;
+            }
+            
+            .checkbox-items {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 18px;
+            }
+            
+            .submit-btn {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 रोगी सूचना फॉर्म</h1>
+            <p>Patient Information Form</p>
+            <p style="font-size: 12px; margin-top: 10px;">कृपया सभी आवश्यक जानकारी सही-सही भरें | Please fill all required information correctly</p>
+        </div>
+
+        <div class="form-content">
+            <form id="patientForm">
+                <!-- Wellness Coach -->
+                <div class="section">
+                    <div class="section-title">वेलनेस कोच विवरण | Wellness Coach Details</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>DNW ID</label>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <span style="padding: 12px 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px 0 0 12px; font-weight: bold;">DNW</span>
+                                <input type="text" id="dnwId" name="dnwId" placeholder="नंबर दर्ज करें" pattern="[0-9]+" title="केवल नंबर डालें" style="border-radius: 0 12px 12px 0; flex: 1;" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="referralName" name="referralName" placeholder="नाम दर्ज करें">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="referralMobile" name="referralMobile" pattern="[0-9]{10}" maxlength="10" title="10 अंकों का मोबाइल नंबर" placeholder="10 अंकों का नंबर" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Basic Information -->
+                <div class="section">
+                    <div class="section-title">मूल जानकारी | Basic Information</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>नाम | Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required placeholder="पूरा नाम दर्ज करें">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>जन्म तिथि | Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>आयु | Age</label>
+                            <input type="text" id="age" name="age" readonly placeholder="स्वतः गणना होगी" style="background: rgba(102, 126, 234, 0.1);">
+                            <span class="info-text">जन्म तिथि से स्वतः गणना</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>लिंग | Gender <span class="required">*</span></label>
+                            <select id="gender" name="gender" required>
+                                <option value="">चुनें | Select</option>
+                                <option value="Male">पुरुष | Male</option>
+                                <option value="Female">महिला | Female</option>
+                                <option value="Other">अन्य | Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>मोबाइल नंबर | Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का नंबर" title="10 अंकों का मोबाइल नंबर" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>पिता/पति का नाम | Father/Husband Name</label>
+                            <input type="text" id="fatherHusband" name="fatherHusband" placeholder="नाम दर्ज करें">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>पता | Address</label>
+                            <input type="text" id="address" name="address" placeholder="पूरा पता दर्ज करें">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>पिन कोड | PIN Code</label>
+                            <input type="text" id="pin" name="pin" pattern="[0-9]{6}" maxlength="6" placeholder="6 अंक" title="6 अंकों का पिन कोड" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complaint -->
+                <div class="section">
+                    <div class="section-title">मुख्य शिकायत | Chief Complaint</div>
+                    <div class="form-group">
+                        <label>वर्तमान लक्षण / शिकायत | Current Symptoms / Complaint <span class="required">*</span></label>
+                        <textarea id="complaint" name="complaint" required placeholder="मरीज की मुख्य समस्या और लक्षण यहाँ लिखें... (जैसे: बुखार, सिरदर्द, पेट दर्द आदि)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Addiction -->
+                <div class="section">
+                    <div class="section-title">व्यसन | Addiction</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-items">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="smoking" name="addiction" value="Smoking">
+                                <label for="smoking">धूम्रपान | Smoking</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="alcohol" name="addiction" value="Alcohol">
+                                <label for="alcohol">शराब | Alcohol</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tobacco" name="addiction" value="Tobacco">
+                                <label for="tobacco">तंबाकू | Tobacco</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="drugs" name="addiction" value="Drugs">
+                                <label for="drugs">नशीली दवाएं | Drugs</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="noAddiction" name="addiction" value="None">
+                                <label for="noAddiction">कोई नहीं | None</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Past Surgery -->
+                <div class="section">
+                    <div class="section-title">पूर्व सर्जरी | Past Surgery</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-items">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="appendectomy" name="surgery" value="Appendectomy">
+                                <label for="appendectomy">Appendectomy</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cholecystectomy" name="surgery" value="Cholecystectomy">
+                                <label for="cholecystectomy">Cholecystectomy</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hernia" name="surgery" value="Hernia">
+                                <label for="hernia">Hernia</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="csection" name="surgery" value="C-Section">
+                                <label for="csection">C-Section</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hysterectomy" name="surgery" value="Hysterectomy">
+                                <label for="hysterectomy">Hysterectomy</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cabg" name="surgery" value="CABG">
+                                <label for="cabg">CABG</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="otherSurgery" name="surgery" value="Other">
+                                <label for="otherSurgery">अन्य | Other</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="noSurgery" name="surgery" value="None">
+                                <label for="noSurgery">कोई नहीं | None</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical History -->
+                <div class="section">
+                    <div class="section-title">चिकित्सा इतिहास | Medical History</div>
+                    <div class="form-group">
+                        <label>पिछली बीमारियां या स्वास्थ्य समस्याएं | Previous Illnesses or Health Problems</label>
+                        <textarea id="medicalHistory" name="medicalHistory" placeholder="जैसे: मधुमेह, उच्च रक्तचाप, अस्थमा आदि"></textarea>
+                    </div>
+                </div>
+
+                <!-- Gynecology Section (For Females Only) -->
+                <div class="section gyneco-section" id="gynecoSection">
+                    <div class="section-title">प्रसूति संबंधी जानकारी | Gynecology Information (महिलाओं के लिए | For Females)</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>रजोनिवृत्ति | Menopause</label>
+                            <select id="menopause" name="menopause">
+                                <option value="NA">लागू नहीं | NA</option>
+                                <option value="Yes">हाँ | Yes</option>
+                                <option value="No">नहीं | No</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>अंतिम मासिक धर्म | LMP (Last Menstrual Period)</label>
+                            <input type="date" id="lmp" name="lmp">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>चक्र (दिनों में) | Cycle (in days)</label>
+                            <input type="text" id="cycle" name="cycle" placeholder="जैसे: 28">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>अवधि (दिनों में) | Duration (in days)</label>
+                            <input type="text" id="duration" name="duration" placeholder="जैसे: 5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>कुल बच्चे | Total Children</label>
+                            <input type="number" id="totalChild" name="totalChild" min="0" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>अंतिम बच्चे की जन्म तिथि | Last Child DOB</label>
+                            <input type="date" id="lastChildDob" name="lastChildDob">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>अंतिम बच्चे की आयु | Last Child Age</label>
+                            <input type="text" id="lastChildAge" name="lastChildAge" readonly placeholder="स्वतः गणना" style="background: rgba(102, 126, 234, 0.1);">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Medications -->
+                <div class="section">
+                    <div class="section-title">वर्तमान दवाएं | Current Medications</div>
+                    <div class="form-group">
+                        <label>कोई दवा ले रहे हैं? | On Any Medicines?</label>
+                        <textarea id="onMedicines" name="onMedicines" placeholder="दवाओं के नाम और खुराक लिखें"></textarea>
+                    </div>
+                </div>
+
+                <!-- Recent Investigation -->
+                <div class="section">
+                    <div class="section-title">हाल की जांच | Recent Investigation</div>
+                    <div class="form-group">
+                        <label>हाल की प्रयोगशाला जांच या रिपोर्ट | Recent Lab Tests or Reports</label>
+                        <textarea id="investigation" name="investigation" placeholder="जैसे: BS: 120, BP: 130/80, Hb: 12.5"></textarea>
+                    </div>
+                </div>
+
+                <!-- Vitals -->
+                <div class="section">
+                    <div class="section-title">महत्वपूर्ण संकेत | Vital Signs</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>रक्तचाप | BP (Blood Pressure)</label>
+                            <input type="text" id="bp" name="bp" placeholder="जैसे: 120/80">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>नाड़ी | Pulse (per min)</label>
+                            <input type="text" id="pulse" name="pulse" placeholder="जैसे: 72">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>तापमान | Temperature (°F)</label>
+                            <input type="text" id="temp" name="temp" placeholder="जैसे: 98.6">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>श्वसन दर | RR (Respiratory Rate)</label>
+                            <input type="text" id="rr" name="rr" placeholder="जैसे: 16">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>SpO2 (Oxygen Saturation %)</label>
+                            <input type="text" id="spo2" name="spo2" placeholder="जैसे: 98">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>वजन | Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" step="0.1" placeholder="जैसे: 65">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>ऊंचाई | Height (cm)</label>
+                            <input type="number" id="height" name="height" step="0.1" placeholder="जैसे: 165">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>BMI (बॉडी मास इंडेक्स)</label>
+                            <input type="text" id="bmi" name="bmi" readonly placeholder="स्वतः गणना" style="background: rgba(102, 126, 234, 0.1);">
+                            <span class="info-text" id="bmiCategory"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="submit-btn">
+                        📄 Generate & Download
+                    </button>
+                    
+                    <button type="button" class="submit-btn" onclick="sendViaWhatsApp()">
+                        📱 Send Via WhatsApp
+                    </button>
+                    
+                    <button type="button" class="submit-btn" onclick="sendViaArattai()">
+                        💬 Send Via Arattai
+                    </button>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <p style="font-size: 18px; font-weight: bold; color: #2d3436;">PDF बनाई जा रही है... | Generating PDF...</p>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <p style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">सफलतापूर्वक! | Success!</p>
+                    <p style="font-size: 16px;">आपकी रोगी सूचना PDF डाउनलोड हो गई है। | Your patient information PDF has been downloaded.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Calculate age from DOB
+        function calculateAge(dob) {
+            if (!dob) return '';
+            
+            const birthDate = new Date(dob);
+            const today = new Date();
+            
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+            
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            return `${years}-Y ${months}-M ${days}-D`;
+        }
+
+        // Calculate BMI
+        function calculateBMI(weight, height) {
+            if (!weight || !height || weight <= 0 || height <= 0) {
+                return { bmi: '', category: '' };
+            }
+            
+            const heightM = height / 100;
+            const bmi = (weight / (heightM * heightM)).toFixed(1);
+            
+            let category = '';
+            if (bmi < 18.5) {
+                category = 'Underweight (कम वजन)';
+            } else if (bmi >= 18.5 && bmi < 25) {
+                category = 'Normal (सामान्य)';
+            } else if (bmi >= 25 && bmi < 30) {
+                category = 'Overweight (अधिक वजन)';
+            } else {
+                category = 'Obese (मोटापा)';
+            }
+            
+            return { bmi, category };
+        }
+
+        // Event listeners
+        document.getElementById('dob').addEventListener('change', function() {
+            const age = calculateAge(this.value);
+            document.getElementById('age').value = age;
+        });
+
+        document.getElementById('lastChildDob').addEventListener('change', function() {
+            const age = calculateAge(this.value);
+            document.getElementById('lastChildAge').value = age;
+        });
+
+        document.getElementById('weight').addEventListener('input', updateBMI);
+        document.getElementById('height').addEventListener('input', updateBMI);
+
+        function updateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const result = calculateBMI(weight, height);
+            
+            document.getElementById('bmi').value = result.bmi;
+            document.getElementById('bmiCategory').textContent = result.category;
+        }
+
+        // Show/Hide gynecology section based on gender
+        document.getElementById('gender').addEventListener('change', function() {
+            const gynecoSection = document.getElementById('gynecoSection');
+            if (this.value === 'Female') {
+                gynecoSection.classList.add('active');
+            } else {
+                gynecoSection.classList.remove('active');
+            }
+        });
+
+        // Detect if Android
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
+
+        // Detect if mobile
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Form submission
+        document.getElementById('patientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            const submitButtons = document.querySelectorAll('.submit-btn');
+            submitButtons.forEach(btn => btn.disabled = true);
+            
+            const data = collectFormData();
+            
+            // Generate PDF
+            setTimeout(() => {
+                generatePDF(data, 'download');
+            }, 500);
+        });
+
+        // Collect form data function
+        function collectFormData() {
+            const formData = new FormData(document.getElementById('patientForm'));
+            const data = {};
+            
+            // Wellness Coach details
+            data.dnwId = formData.get('dnwId');
+            data.referralName = formData.get('referralName');
+            data.referralMobile = formData.get('referralMobile');
+            
+            // Basic fields
+            data.name = formData.get('name');
+            data.dob = formData.get('dob');
+            data.age = document.getElementById('age').value;
+            data.gender = formData.get('gender');
+            data.mobile = formData.get('mobile');
+            data.fatherHusband = formData.get('fatherHusband');
+            data.address = formData.get('address');
+            data.pin = formData.get('pin');
+            
+            // Complaint
+            data.complaint = formData.get('complaint');
+            
+            // Addiction
+            const addictions = [];
+            document.querySelectorAll('input[name="addiction"]:checked').forEach(cb => {
+                addictions.push(cb.value);
+            });
+            data.addiction = addictions.join(', ') || 'None';
+            
+            // Surgery
+            const surgeries = [];
+            document.querySelectorAll('input[name="surgery"]:checked').forEach(cb => {
+                surgeries.push(cb.value);
+            });
+            data.surgery = surgeries.join(', ') || 'None';
+            
+            // Medical history
+            data.medicalHistory = formData.get('medicalHistory');
+            
+            // Gynecology (if female)
+            if (data.gender === 'Female') {
+                data.menopause = formData.get('menopause');
+                data.lmp = formData.get('lmp');
+                data.cycle = formData.get('cycle');
+                data.duration = formData.get('duration');
+                data.totalChild = formData.get('totalChild');
+                data.lastChildDob = formData.get('lastChildDob');
+                data.lastChildAge = document.getElementById('lastChildAge').value;
+            }
+            
+            // Current medications
+            data.onMedicines = formData.get('onMedicines');
+            
+            // Investigation
+            data.investigation = formData.get('investigation');
+            
+            // Vitals
+            data.bp = formData.get('bp');
+            data.pulse = formData.get('pulse');
+            data.temp = formData.get('temp');
+            data.rr = formData.get('rr');
+            data.spo2 = formData.get('spo2');
+            data.weight = formData.get('weight');
+            data.height = formData.get('height');
+            data.bmi = document.getElementById('bmi').value;
+            data.bmiCategory = document.getElementById('bmiCategory').textContent;
+            
+            return data;
+        }
+
+        // Send via WhatsApp
+        async function sendViaWhatsApp() {
+            const form = document.getElementById('patientForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const phoneNumber = prompt('WhatsApp Number दर्ज करें (10 digits):\nEnter WhatsApp Number (10 digits):');
+            
+            if (!phoneNumber) return;
+            
+            if (!/^[0-9]{10}$/.test(phoneNumber)) {
+                alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!\nPlease enter valid 10 digit mobile number!');
+                return;
+            }
+
+            document.getElementById('loading').classList.add('active');
+            
+            const data = collectFormData();
+            
+            setTimeout(() => {
+                const message = `🏥 Patient Information Form\n\n` +
+                               `Name: ${data.name}\n` +
+                               `Mobile: ${data.mobile}\n` +
+                               `Chief Complaint: ${data.complaint}\n\n` +
+                               `कृपया संलग्न PDF देखें।\nPlease see attached PDF.`;
+                
+                if (isMobile()) {
+                    const pdfBlob = generatePDFBlob(data);
+                    const fileName = `Patient_${data.name.replace(/\s+/g, '_')}.pdf`;
+                    
+                    if (navigator.share && navigator.canShare) {
+                        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            navigator.share({
+                                title: 'Patient Information',
+                                text: message,
+                                files: [file]
+                            }).then(() => {
+                                document.getElementById('loading').classList.remove('active');
+                                alert('✅ PDF share की गई!\nPDF shared successfully!');
+                            }).catch((error) => {
+                                console.log('Share failed, trying Android intent:', error);
+                                if (isAndroid()) {
+                                    openWhatsAppAndroid(phoneNumber, message, pdfBlob, fileName);
+                                } else {
+                                    openWhatsAppWeb(phoneNumber, message);
+                                }
+                            });
+                        } else {
+                            if (isAndroid()) {
+                                openWhatsAppAndroid(phoneNumber, message, pdfBlob, fileName);
+                            } else {
+                                openWhatsAppWeb(phoneNumber, message);
+                            }
+                        }
+                    } else {
+                        if (isAndroid()) {
+                            openWhatsAppAndroid(phoneNumber, message, pdfBlob, fileName);
+                        } else {
+                            openWhatsAppWeb(phoneNumber, message);
+                        }
+                    }
+                } else {
+                    openWhatsAppWeb(phoneNumber, message);
+                }
+            }, 500);
+        }
+
+        function openWhatsAppAndroid(phoneNumber, message, pdfBlob, fileName) {
+            document.getElementById('loading').classList.remove('active');
+            
+            const url = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setTimeout(() => {
+                const whatsappIntent = `intent://send?phone=91${phoneNumber}&text=${encodeURIComponent(message)}#Intent;scheme=whatsapp;package=com.whatsapp;end`;
+                window.location.href = whatsappIntent;
+                
+                setTimeout(() => {
+                    const waLink = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(message)}`;
+                    window.open(waLink, '_blank');
+                    
+                    alert('📱 WhatsApp खुल गया है!\n\n✅ PDF download हो गई है।\n\nकृपया WhatsApp में:\n1. Attachment icon (📎) click करें\n2. Document select करें\n3. Download की गई PDF select करें\n4. Send करें!');
+                }, 2000);
+            }, 1000);
+        }
+
+        function openWhatsAppWeb(phoneNumber, message) {
+            document.getElementById('loading').classList.remove('active');
+            const whatsappUrl = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            alert('📱 WhatsApp खुल गया है!\n\nकृपया PDF manually attach करें:\n1. WhatsApp में attachment icon (📎) click करें\n2. Document select करें\n3. अभी download की गई PDF select करें');
+        }
+
+        // Send via Arattai
+        async function sendViaArattai() {
+            const form = document.getElementById('patientForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const phoneNumber = prompt('Arattai Number दर्ज करें (10 digits):\nEnter Arattai Number (10 digits):');
+            
+            if (!phoneNumber) return;
+            
+            if (!/^[0-9]{10}$/.test(phoneNumber)) {
+                alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!\nPlease enter valid 10 digit mobile number!');
+                return;
+            }
+
+            document.getElementById('loading').classList.add('active');
+            
+            const data = collectFormData();
+            
+            setTimeout(() => {
+                const message = `🏥 Patient Information Form\n\n` +
+                               `Name: ${data.name}\n` +
+                               `Mobile: ${data.mobile}\n` +
+                               `Chief Complaint: ${data.complaint}\n\n` +
+                               `कृपया संलग्न PDF देखें।\nPlease see attached PDF.`;
+                
+                if (isMobile()) {
+                    const pdfBlob = generatePDFBlob(data);
+                    const fileName = `Patient_${data.name.replace(/\s+/g, '_')}.pdf`;
+                    
+                    if (navigator.share && navigator.canShare) {
+                        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                        
+                        if (navigator.canShare({ files: [file] })) {
+                            navigator.share({
+                                title: 'Patient Information',
+                                text: message,
+                                files: [file]
+                            }).then(() => {
+                                document.getElementById('loading').classList.remove('active');
+                                alert('✅ PDF share की गई!\nPDF shared successfully!');
+                            }).catch((error) => {
+                                console.log('Share failed, trying Arattai intent:', error);
+                                if (isAndroid()) {
+                                    openArattaiAndroid(phoneNumber, message, pdfBlob, fileName);
+                                } else {
+                                    openArattaiApp(phoneNumber, message);
+                                }
+                            });
+                        } else {
+                            if (isAndroid()) {
+                                openArattaiAndroid(phoneNumber, message, pdfBlob, fileName);
+                            } else {
+                                openArattaiApp(phoneNumber, message);
+                            }
+                        }
+                    } else {
+                        if (isAndroid()) {
+                            openArattaiAndroid(phoneNumber, message, pdfBlob, fileName);
+                        } else {
+                            openArattaiApp(phoneNumber, message);
+                        }
+                    }
+                } else {
+                    openArattaiApp(phoneNumber, message);
+                }
+            }, 500);
+        }
+
+        function openArattaiAndroid(phoneNumber, message, pdfBlob, fileName) {
+            document.getElementById('loading').classList.remove('active');
+            
+            const url = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setTimeout(() => {
+                const arattaiIntent = `intent://send?phone=91${phoneNumber}&text=${encodeURIComponent(message)}#Intent;scheme=arattai;package=com.arattai;end`;
+                window.location.href = arattaiIntent;
+                
+                setTimeout(() => {
+                    const shareText = `Arattai - +91${phoneNumber}\n\n${message}`;
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Share via Arattai',
+                            text: shareText
+                        }).catch(() => {
+                            showArattaiInstructions(phoneNumber);
+                        });
+                    } else {
+                        showArattaiInstructions(phoneNumber);
+                    }
+                }, 2000);
+            }, 1000);
+        }
+
+        function openArattaiApp(phoneNumber, message) {
+            document.getElementById('loading').classList.remove('active');
+            
+            const arattaiUrl = `arattai://send?phone=91${phoneNumber}&text=${encodeURIComponent(message)}`;
+            const link = document.createElement('a');
+            link.href = arattaiUrl;
+            link.click();
+            
+            setTimeout(() => {
+                showArattaiInstructions(phoneNumber);
+            }, 1000);
+        }
+
+        function showArattaiInstructions(phoneNumber) {
+            alert('💬 Arattai में PDF भेजें:\n\n' +
+                  '✅ PDF download हो गई है।\n\n' +
+                  'कृपया Arattai app में:\n' +
+                  '1. Arattai app open करें\n' +
+                  '2. Contact search करें: +91' + phoneNumber + '\n' +
+                  '3. Attachment icon (📎) click करें\n' +
+                  '4. Download की गई PDF select करें\n' +
+                  '5. Send करें!');
+        }
+
+        // Generate PDF Blob (for sharing)
+        function generatePDFBlob(data) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            buildPDFContent(doc, data);
+            
+            return doc.output('blob');
+        }
+
+        // Generate PDF (for download)
+        function generatePDF(data, mode = 'download') {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            buildPDFContent(doc, data);
+            
+            const fileName = `Patient_Info_${data.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+            doc.save(fileName);
+            
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('successMessage').classList.add('active');
+            const submitButtons = document.querySelectorAll('.submit-btn');
+            submitButtons.forEach(btn => btn.disabled = false);
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('active');
+                document.getElementById('patientForm').reset();
+                document.getElementById('gynecoSection').classList.remove('active');
+            }, 3000);
+        }
+
+        // Build PDF Content
+        function buildPDFContent(doc, data) {
+            let yPos = 15;
+            const lineHeight = 5;
+            const pageHeight = doc.internal.pageSize.height;
+            const leftMargin = 15;
+            const rightMargin = 195;
+            
+            // Title
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('Patient Information Form', 105, yPos, { align: 'center' });
+            yPos += 8;
+            
+            // Line
+            doc.setLineWidth(0.3);
+            doc.line(leftMargin, yPos, rightMargin, yPos);
+            yPos += 6;
+            
+            // Section function
+            function addSection(title) {
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'bold');
+                doc.setFillColor(102, 126, 234);
+                doc.rect(leftMargin, yPos - 4, 180, 6, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.text(title, leftMargin + 2, yPos);
+                doc.setTextColor(0, 0, 0);
+                yPos += 8;
+            }
+            
+            // Two column field
+            function addFieldTwoColumn(label1, value1, label2, value2) {
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'bold');
+                doc.text(label1 + ':', leftMargin + 2, yPos);
+                doc.setFont(undefined, 'normal');
+                doc.text(String(value1 || 'N/A'), leftMargin + 35, yPos);
+                doc.setFont(undefined, 'bold');
+                doc.text(label2 + ':', 110, yPos);
+                doc.setFont(undefined, 'normal');
+                doc.text(String(value2 || 'N/A'), 140, yPos);
+                yPos += lineHeight;
+            }
+            
+            // Wellness Coach - Single Line
+            addSection('Wellness Coach Details');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'bold');
+            doc.text('DNW ID:', leftMargin + 2, yPos);
+            doc.setFont(undefined, 'normal');
+            doc.text('DNW' + (data.dnwId || 'N/A'), leftMargin + 18, yPos);
+            doc.setFont(undefined, 'bold');
+            doc.text('Name:', leftMargin + 50, yPos);
+            doc.setFont(undefined, 'normal');
+            doc.text(String(data.referralName || 'N/A'), leftMargin + 62, yPos);
+            doc.setFont(undefined, 'bold');
+            doc.text('Mobile:', leftMargin + 120, yPos);
+            doc.setFont(undefined, 'normal');
+            doc.text(String(data.referralMobile || 'N/A'), leftMargin + 138, yPos);
+            yPos += lineHeight + 2;
+            
+            // Basic Information
+            addSection('Basic Information');
+            addFieldTwoColumn('Name', data.name, 'DOB', data.dob);
+            addFieldTwoColumn('Age', data.age, 'Gender', data.gender);
+            addFieldTwoColumn('Mobile', data.mobile, 'Father/H', data.fatherHusband);
+            addFieldTwoColumn('Address', data.address, 'PIN', data.pin);
+            yPos += 2;
+            
+            // Chief Complaint
+            addSection('Chief Complaint');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            const complaintLines = doc.splitTextToSize(data.complaint || 'No complaint mentioned', 175);
+            doc.text(complaintLines.slice(0, 3), leftMargin + 2, yPos);
+            yPos += lineHeight * Math.min(complaintLines.length, 3);
+            yPos += 2;
+            
+            // Addiction & Surgery - Single Line
+            addSection('Addiction & Surgery');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'bold');
+            doc.text('Addiction:', leftMargin + 2, yPos);
+            doc.setFont(undefined, 'normal');
+            doc.text(String(data.addiction || 'None'), leftMargin + 25, yPos);
+            doc.setFont(undefined, 'bold');
+            doc.text('Surgery:', leftMargin + 100, yPos);
+            doc.setFont(undefined, 'normal');
+            doc.text(String(data.surgery || 'None'), leftMargin + 120, yPos);
+            yPos += lineHeight + 2;
+            
+            // Medical History
+            addSection('Medical History');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            const historyLines = doc.splitTextToSize(data.medicalHistory || 'No medical history', 175);
+            doc.text(historyLines.slice(0, 2), leftMargin + 2, yPos);
+            yPos += lineHeight * Math.min(historyLines.length, 2);
+            yPos += 2;
+            
+            // Gynecology (if female)
+            if (data.gender === 'Female') {
+                addSection('Gynecology Info');
+                addFieldTwoColumn('Menopause', data.menopause, 'LMP', data.lmp);
+                addFieldTwoColumn('Cycle', data.cycle, 'Duration', data.duration);
+                addFieldTwoColumn('Total Child', data.totalChild, 'Last Child Age', data.lastChildAge);
+                yPos += 2;
+            }
+            
+            // Current Medications
+            addSection('Current Medications');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            const medLines = doc.splitTextToSize(data.onMedicines || 'Not on any medicines', 175);
+            doc.text(medLines.slice(0, 2), leftMargin + 2, yPos);
+            yPos += lineHeight * Math.min(medLines.length, 2);
+            yPos += 2;
+            
+            // Recent Investigation
+            addSection('Recent Investigation');
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            const invLines = doc.splitTextToSize(data.investigation || 'No recent investigation', 175);
+            doc.text(invLines.slice(0, 2), leftMargin + 2, yPos);
+            yPos += lineHeight * Math.min(invLines.length, 2);
+            yPos += 2;
+            
+            // Vitals
+            addSection('Vital Signs');
+            addFieldTwoColumn('BP', data.bp, 'Pulse', data.pulse);
+            addFieldTwoColumn('Temp', data.temp, 'RR', data.rr);
+            addFieldTwoColumn('SpO2', data.spo2, 'Weight', data.weight + ' kg');
+            addFieldTwoColumn('Height', data.height + ' cm', 'BMI', data.bmi + ' - ' + data.bmiCategory);
+            
+            // Footer
+            yPos = pageHeight - 12;
+            doc.setFontSize(7);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Generated on: ' + new Date().toLocaleString('en-IN'), 105, yPos, { align: 'center' });
+        }
+    </script>
+</body>
+</html>
